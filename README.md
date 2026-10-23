@@ -5,7 +5,7 @@
 </p>
 
 <!-- Dynamic badges (live data from GitHub) -->
-[![CI](https://img.shields.io/github/actions/workflow/status/axcel-blade/PocketController-Server/ci-server.yml?branch=main&label=CI&logo=dotnet)](https://github.com/axcel-blade/PocketController-Server/actions/workflows/ci-server.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/axcel-blade/PocketController-Server/ci.yml?branch=main&label=CI&logo=dotnet)](https://github.com/axcel-blade/PocketController-Server/actions/workflows/ci.yml)
 [![Latest release](https://img.shields.io/github/v/release/axcel-blade/PocketController-Server?include_prereleases&sort=semver)](https://github.com/axcel-blade/PocketController-Server/releases)
 [![Open issues](https://img.shields.io/github/issues/axcel-blade/PocketController-Server)](https://github.com/axcel-blade/PocketController-Server/issues)
 [![Last commit](https://img.shields.io/github/last-commit/axcel-blade/PocketController-Server/main)](https://github.com/axcel-blade/PocketController-Server/commits/main)
