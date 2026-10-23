@@ -1,8 +1,8 @@
 # PocketController-Server
 
-Windows server for [PocketController](https://github.com/axcel-blade/PocketController). The phone app sends UDP input; this server turns each phone into a virtual Xbox 360 (XInput) controller through the [ViGEmBus](https://github.com/nefarius/ViGEmBus) driver.
+Windows server for [PocketController](https://github.com/axcel-blade/PocketController-App). The phone app sends UDP input; this server turns each phone into a virtual Xbox 360 (XInput) controller through the [ViGEmBus](https://github.com/nefarius/ViGEmBus) driver.
 
-The wire format is documented in the app repo at `docs/PROTOCOL.md`.
+The wire format is documented in the app repo at [docs/PROTOCOL.md](https://github.com/axcel-blade/PocketController-App/blob/main/docs/PROTOCOL.md).
 
 ## Requirements
 
