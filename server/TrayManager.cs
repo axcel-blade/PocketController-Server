@@ -1,0 +1,43 @@
+namespace PocketControllerServer;
+
+/// <summary>
+/// Manages the Windows system tray icon for PocketController Server.
+/// Closing the main window hides it rather than exiting; the tray icon
+/// lets the user show the window again or exit the process entirely.
+/// </summary>
+public sealed class TrayManager : IDisposable
+{
+    private readonly NotifyIcon _trayIcon;
+    private readonly Form _mainForm;
+
+    /// <param name="mainForm">The form to show/hide via the tray menu.</param>
+    /// <param name="icon">Icon shown in the notification area.</param>
+    public TrayManager(Form mainForm, Icon icon)
+    {
+        _mainForm = mainForm;
+
+        var menu = new ContextMenuStrip();
+        menu.Items.Add("Show", null, (_, _) => ShowForm());
+        menu.Items.Add("Exit", null, (_, _) => Application.Exit());
+
+        _trayIcon = new NotifyIcon
+        {
+            Text             = "PocketController Server",
+            Icon             = icon,
+            ContextMenuStrip = menu,
+            Visible          = true
+        };
+
+        _trayIcon.DoubleClick += (_, _) => ShowForm();
+    }
+
+    private void ShowForm()
+    {
+        _mainForm.Show();
+        _mainForm.WindowState = FormWindowState.Normal;
+        _mainForm.Activate();
+    }
+
+    /// <inheritdoc/>
+    public void Dispose() => _trayIcon.Dispose();
+}
