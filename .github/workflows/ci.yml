@@ -1,0 +1,62 @@
+name: CI - Server
+
+on:
+  push:
+    branches: [main, develop, "feature/**", "release/**", "hotfix/**"]
+    paths:
+      - "server/**"
+      - ".github/workflows/ci-server.yml"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "server/**"
+      - ".github/workflows/ci-server.yml"
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      checks: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore server/PocketControllerServer.slnx -r win-x64
+
+      - name: Build
+        run: dotnet build server/PocketControllerServer.slnx --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test server/Tests/PocketController.Tests.csproj --no-restore --configuration Release --logger "trx;LogFileName=test-results.trx"
+
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: .NET Tests
+          path: "**/*.trx"
+          reporter: dotnet-trx
+
+      - name: Publish
+        run: >
+          dotnet publish server/PocketControllerServer.csproj
+          --no-restore
+          --configuration Release
+          --runtime win-x64
+          --self-contained false
+          --output publish/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PocketControllerServer-${{ github.sha }}
+          path: publish/
+          retention-days: 14
