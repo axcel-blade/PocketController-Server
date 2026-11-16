@@ -8,27 +8,27 @@ The server reads UDP packets, keeps one session per sender, and drives a virtual
 
 | Path | Responsibility |
 |------|----------------|
-| `server/Protocol/GamepadMessage.cs` | Fields in one 48-byte packet. |
-| `server/Protocol/MessageType.cs` | Packet type byte: `Connect`, `Disconnect`, `Input`, `Ping`, and the replies. |
-| `server/Protocol/MessageSerializer.cs` | Little-endian serialize and deserialize. Every packet is 48 bytes. |
-| `server/Protocol/DiscoveryMessage.cs` | Probe and announcement text, separate from the 48-byte packet. |
-| `server/Protocol/Constants.cs` | Ports `5555`, `5556`, `5557`, four sessions, 5 s timeout, 2 s announcements. |
-| `server/NetworkLayer/UdpServer.cs` | Receive loop and `Send` for replies. |
-| `server/NetworkLayer/ClientManager.cs` | One session per endpoint, up to 4. |
-| `server/NetworkLayer/ClientSession.cs` | One endpoint and the time of its last packet. |
-| `server/NetworkLayer/DiscoveryService.cs` | Answers probes on UDP 5556 and broadcasts announcements on UDP 5557. |
-| `server/NetworkLayer/HeartbeatMonitor.cs` | Drops a session that has been quiet for 5 s. Checks every 3 s. |
-| `server/GamepadDriver/VirtualGamepad.cs` | One ViGEm Xbox 360 controller. |
-| `server/GamepadDriver/VirtualGamepadManager.cs` | Creates and removes one controller per session. |
-| `server/GamepadDriver/GamepadMapper.cs` | Maps packet fields onto Xbox 360 buttons, sticks and triggers. |
-| `server/ServerController.cs` | Connects the network layer to the gamepad driver and sends replies. |
-| `server/MainForm.cs` | Server window. `LayoutCards()` places the controls on a DPI-scaled grid. |
-| `server/MainForm.Designer.cs` | Window controls, including the version label. |
-| `server/Theme.cs` | Window colours. |
-| `server/ThemedControls.cs` | Drawn controls used by the window. |
-| `server/TrayManager.cs` | Notification-area icon. |
-| `server/SettingsManager.cs` | Saved settings, including the listen port. |
-| `server/Assets/app.ico` | Icon embedded for the window and tray. |
+| `Protocol/GamepadMessage.cs` | Fields in one 48-byte packet. |
+| `Protocol/MessageType.cs` | Packet type byte: `Connect`, `Disconnect`, `Input`, `Ping`, and the replies. |
+| `Protocol/MessageSerializer.cs` | Little-endian serialize and deserialize. Every packet is 48 bytes. |
+| `Protocol/DiscoveryMessage.cs` | Probe and announcement text, separate from the 48-byte packet. |
+| `Protocol/Constants.cs` | Ports `5555`, `5556`, `5557`, four sessions, 5 s timeout, 2 s announcements. |
+| `NetworkLayer/UdpServer.cs` | Receive loop and `Send` for replies. |
+| `NetworkLayer/ClientManager.cs` | One session per endpoint, up to 4. |
+| `NetworkLayer/ClientSession.cs` | One endpoint and the time of its last packet. |
+| `NetworkLayer/DiscoveryService.cs` | Answers probes on UDP 5556 and broadcasts announcements on UDP 5557. |
+| `NetworkLayer/HeartbeatMonitor.cs` | Drops a session that has been quiet for 5 s. Checks every 3 s. |
+| `GamepadDriver/VirtualGamepad.cs` | One ViGEm Xbox 360 controller. |
+| `GamepadDriver/VirtualGamepadManager.cs` | Creates and removes one controller per session. |
+| `GamepadDriver/GamepadMapper.cs` | Maps packet fields onto Xbox 360 buttons, sticks and triggers. |
+| `ServerController.cs` | Connects the network layer to the gamepad driver and sends replies. |
+| `MainForm.cs` | Server window. `LayoutCards()` places the controls on a DPI-scaled grid. |
+| `MainForm.Designer.cs` | Window controls, including the version label. |
+| `Theme.cs` | Window colours. |
+| `ThemedControls.cs` | Drawn controls used by the window. |
+| `TrayManager.cs` | Notification-area icon. |
+| `SettingsManager.cs` | Saved settings, including the listen port. |
+| `Assets/app.ico` | Icon embedded for the window and tray. |
 
 The window shows Start/Stop, the address to use, the list of sessions, and an event log.
 
@@ -58,8 +58,8 @@ While the controller port is open, `DiscoveryService` listens on UDP `5556` for 
 
 ## Testing
 
-- `server/Tests/Protocol/MessageSerializerTests.cs` — serializer round-trip.
-- `server/Tests/Protocol/GamepadMessageTests.cs` — button-bit checks.
-- `server/Tests/NetworkLayer/ClientManagerTests.cs` — session limits and lookup.
-- `server/Tests/NetworkLayer/ClientSessionTests.cs` — session state.
-- `server/Tests/NetworkLayer/DiscoveryTests.cs` — discovery packets.
+- `Tests/Protocol/MessageSerializerTests.cs` — serializer round-trip.
+- `Tests/Protocol/GamepadMessageTests.cs` — button-bit checks.
+- `Tests/NetworkLayer/ClientManagerTests.cs` — session limits and lookup.
+- `Tests/NetworkLayer/ClientSessionTests.cs` — session state.
+- `Tests/NetworkLayer/DiscoveryTests.cs` — discovery packets.

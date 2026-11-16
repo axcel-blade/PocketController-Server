@@ -8,7 +8,7 @@ This policy covers PocketController Server in this repository.
 |---------|-----------|
 | 1.x     | ✅ Yes    |
 
-The version in `server/PocketControllerServer.csproj` is 1.2.2.
+The version in `PocketControllerServer.csproj` is 1.2.2.
 
 ## Reporting a Vulnerability
 
