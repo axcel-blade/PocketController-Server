@@ -1,0 +1,42 @@
+name-template: "PocketController-Server $RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+categories:
+  - title: "Added"
+    labels:
+      - feature
+      - enhancement
+  - title: "Changed"
+    labels:
+      - change
+  - title: "Fixed"
+    labels:
+      - bug
+      - fix
+  - title: "Removed"
+    labels:
+      - removed
+      - breaking
+change-template: "- $TITLE (@$AUTHOR) #$NUMBER"
+change-title-escapes: '\<*_&'
+version-resolver:
+  major:
+    labels:
+      - major
+      - breaking
+  minor:
+    labels:
+      - minor
+      - feature
+      - enhancement
+  patch:
+    labels:
+      - patch
+      - bug
+      - fix
+  default: patch
+exclude-labels:
+  - skip-changelog
+template: |
+  ## Changes
+
+  $CHANGES
