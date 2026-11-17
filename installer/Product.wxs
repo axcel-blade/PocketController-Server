@@ -4,13 +4,13 @@
   <!--
     Build (from repo root after publish/ exists):
       wix build installer\Product.wxs
-        -d Version=1.2.4
+        -d Version=1.2.3
         -d PublishDir=%CD%\publish
         -d IconFile=%CD%\Assets\app.ico
         -d LicenseRtf=%CD%\installer\License.rtf
         -ext WixToolset.UI.wixext
         -arch x64
-        -o artifacts\PocketControllerServer-1.2.4-win-x64.msi
+        -o artifacts\PocketControllerServer-1.2.3-win-x64.msi
   -->
   <Package
       Name="PocketController Server"

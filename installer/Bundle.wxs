@@ -4,12 +4,12 @@
   <!--
     Build (after MSI exists):
       wix build installer\Bundle.wxs
-        -d Version=1.2.4
-        -d MsiPath=%CD%\artifacts\PocketControllerServer-1.2.4-win-x64.msi
+        -d Version=1.2.3
+        -d MsiPath=%CD%\artifacts\PocketControllerServer-1.2.3-win-x64.msi
         -d IconFile=%CD%\Assets\app.ico
         -ext WixToolset.BootstrapperApplications.wixext
         -arch x64
-        -o artifacts\PocketControllerServer-1.2.4-win-x64.exe
+        -o artifacts\PocketControllerServer-1.2.3-win-x64.exe
   -->
   <Bundle
       Name="PocketController Server"

@@ -13,7 +13,7 @@
 
 <!-- Static badges -->
 [![License: MIT](https://img.shields.io/badge/license-MIT-c4f82a)](LICENSE.md)
-[![Version](https://img.shields.io/badge/version-1.2.4-c4f82a)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.2.3-c4f82a)](CHANGELOG.md)
 [![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![Platforms](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4?logo=windows&logoColor=white)](docs/ARCHITECTURE.md)
 [![Protocol](https://img.shields.io/badge/protocol-UDP%20%C2%B7%2048%20bytes-5cd6e6)](docs/PROTOCOL.md)
@@ -78,9 +78,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 | Project | Version |
 |---------|---------|
-| PocketController Server | **1.2.4** |
+| PocketController Server | **1.2.3** |
 
-`PocketControllerServer.csproj` sets `Version`, `AssemblyVersion` (`1.2.4.0`), and `FileVersion` (`1.2.4.0`). The window header in `MainForm.Designer.cs` shows the same number. See the [changelog](CHANGELOG.md).
+`PocketControllerServer.csproj` sets `Version`, `AssemblyVersion` (`1.2.3.0`), and `FileVersion` (`1.2.3.0`). The window header in `MainForm.Designer.cs` shows the same number. See the [changelog](CHANGELOG.md).
 
 ## Further reading
 

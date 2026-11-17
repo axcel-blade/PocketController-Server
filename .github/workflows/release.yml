@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to release as .exe + .msi (e.g. 1.2.4). Creates tag v<version> if missing."
+        description: "Version to release as .exe + .msi (e.g. 1.2.3). Creates tag v<version> if missing."
         required: true
         type: string
 
@@ -52,7 +52,7 @@ jobs:
           }
 
           if ($version -notmatch '^\d+\.\d+\.\d+$') {
-            throw "Invalid version '$version'. Expected numeric SemVer like 1.2.4 (tag v1.2.4)."
+            throw "Invalid version '$version'. Expected numeric SemVer like 1.2.3 (tag v1.2.3)."
           }
 
           $project = 'PocketControllerServer.csproj'
