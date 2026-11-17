@@ -50,6 +50,7 @@ If you change them, update `Protocol/`, `Tests/`, and that document.
   - `README.md` — the version badge and the **Version** section
   - `PocketControllerServer.csproj` — `Version`, `AssemblyVersion`, `FileVersion`
   - `MainForm.Designer.cs` — the `lblVersion` text
+  - Tag the release `vX.Y.Z` (numeric SemVer only, e.g. `v1.2.3`)
 - Do not include build outputs (`bin/`, `obj/`) or IDE files (`.vs/`) in your commit.
 
 ## Code Style

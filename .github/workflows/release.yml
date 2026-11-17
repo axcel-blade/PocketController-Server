@@ -29,13 +29,25 @@ jobs:
         shell: pwsh
         run: |
           if ("${{ github.event_name }}" -eq "workflow_dispatch") {
-            $version = "${{ inputs.version }}".Trim().TrimStart('v', 'V')
+            $version = "${{ inputs.version }}".Trim()
+            if ($version.StartsWith('app-v', [StringComparison]::OrdinalIgnoreCase)) {
+              $version = $version.Substring(5)
+            } elseif ($version.StartsWith('v', [StringComparison]::OrdinalIgnoreCase)) {
+              $version = $version.Substring(1)
+            }
           } else {
-            $version = "${{ github.ref_name }}".TrimStart('v', 'V')
+            $ref = "${{ github.ref_name }}"
+            if ($ref.StartsWith('app-v', [StringComparison]::OrdinalIgnoreCase)) {
+              $version = $ref.Substring(5)
+            } elseif ($ref.StartsWith('v', [StringComparison]::OrdinalIgnoreCase)) {
+              $version = $ref.Substring(1)
+            } else {
+              $version = $ref
+            }
           }
 
-          if ($version -notmatch '^\d+\.\d+\.\d+([+-].+)?$') {
-            throw "Invalid version '$version'. Expected SemVer like 1.2.3 (optional tag v1.2.3)."
+          if ($version -notmatch '^\d+\.\d+\.\d+$') {
+            throw "Invalid version '$version'. Expected numeric SemVer like 1.2.3 (tag v1.2.3)."
           }
 
           $project = 'PocketControllerServer.csproj'
@@ -72,15 +84,18 @@ jobs:
           --no-restore
           --configuration Release
 
-      - name: Publish
+      - name: Publish self-contained installable
         run: >
           dotnet publish PocketControllerServer.csproj
           --no-restore
           --configuration Release
           --runtime win-x64
-          --self-contained false
+          --self-contained true
           --output publish/
           -p:Version=${{ steps.version.outputs.version }}
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
 
       - name: Zip publish output
         shell: pwsh
@@ -103,9 +118,10 @@ jobs:
           $section = if ($match.Success) { $match.Groups['body'].Value.Trim() } else { '' }
 
           $notes = @(
-            "Windows build of PocketController-Server $version (framework-dependent, 64-bit). Requires the .NET 10 runtime and the ViGEmBus driver.",
+            "Windows installable build of PocketController-Server $version (self-contained, 64-bit).",
             "",
-            "- ``$zip``: published server binaries"
+            "- ``$zip``: unzip and run ``PocketControllerServer.exe``. No separate .NET runtime install required.",
+            "- Still requires the ViGEmBus driver."
           ) -join "`n"
 
           if ($section) {

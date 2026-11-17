@@ -4,7 +4,8 @@ The version in `PocketControllerServer.csproj` is **1.2.3** (`Version`, `Assembl
 
 ## [Unreleased]
 
-No notes yet.
+### Changed
+- Tagged releases (`vX.Y.Z`, numeric SemVer) now publish a self-contained Windows zip — unzip and run `PocketControllerServer.exe` without installing the .NET runtime
 
 ## [1.2.3] - 2026-11-17
 
