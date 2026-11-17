@@ -4,9 +4,6 @@ The version in `PocketControllerServer.csproj` is **1.2.3** (`Version`, `Assembl
 
 ## [Unreleased]
 
-### Changed
-- Tagged releases (`vX.Y.Z`, numeric SemVer) now publish a self-contained Windows zip — unzip and run `PocketControllerServer.exe` without installing the .NET runtime
-
 ## [1.2.3] - 2026-11-17
 
 ### Added
@@ -14,3 +11,4 @@ The version in `PocketControllerServer.csproj` is **1.2.3** (`Version`, `Assembl
 
 ### Changed
 - Moved the .NET project to the repository root so `dotnet build` / `dotnet test` work from the clone directory (removed the nested `server/` folder)
+- Tagged releases publish Windows installers (`.exe` setup bootstrapper and `.msi`) instead of a zip — self-contained, no separate .NET runtime install

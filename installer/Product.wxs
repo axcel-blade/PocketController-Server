@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <!--
+    Build (from repo root after publish/ exists):
+      wix build installer\Product.wxs
+        -d Version=1.2.3
+        -d PublishDir=%CD%\publish
+        -d IconFile=%CD%\Assets\app.ico
+        -d LicenseRtf=%CD%\installer\License.rtf
+        -ext WixToolset.UI.wixext
+        -arch x64
+        -o artifacts\PocketControllerServer-1.2.3-win-x64.msi
+  -->
+  <Package
+      Name="PocketController Server"
+      Manufacturer="Axcel Blade"
+      Version="$(Version)"
+      UpgradeCode="8D334F36-7F67-43CF-BB31-3351A7E312EF"
+      Language="1033"
+      Scope="perMachine">
+
+    <SummaryInformation
+        Description="Turn your Android phone into a wireless Xbox 360 controller for your PC."
+        Manufacturer="Axcel Blade" />
+
+    <MajorUpgrade
+        DowngradeErrorMessage="A newer version of PocketController Server is already installed."
+        Schedule="afterInstallInitialize" />
+
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <Icon Id="AppIcon" SourceFile="$(IconFile)" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/axcel-blade/PocketController-Server" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/axcel-blade/PocketController-Server#readme" />
+
+    <Feature Id="ProductFeature" Title="PocketController Server" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentRef Id="ApplicationShortcut" />
+    </Feature>
+
+    <ui:WixUI Id="WixUI_Minimal" />
+    <WixVariable Id="WixUILicenseRtf" Value="$(LicenseRtf)" />
+  </Package>
+
+  <Fragment>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="PocketController Server" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="PocketController" />
+    </StandardDirectory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <Component Id="ServerExecutable" Guid="E6CA193D-88B4-44BB-BF0B-954BD320D4E5">
+        <File Id="ServerExe"
+              Source="$(PublishDir)\PocketControllerServer.exe"
+              KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <Component Id="ApplicationShortcut" Directory="ApplicationProgramsFolder" Guid="9B6124ED-4ECE-4EFA-8EE7-1835E06D42CC">
+      <Shortcut Id="ApplicationStartMenuShortcut"
+                Name="PocketController Server"
+                Description="Wireless Xbox 360 controller server for Windows"
+                Target="[!ServerExe]"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="AppIcon" />
+      <RemoveFolder Id="RemoveApplicationProgramsFolder" Directory="ApplicationProgramsFolder" On="uninstall" />
+      <RegistryValue Root="HKCU"
+                     Key="Software\Axcel Blade\PocketController Server"
+                     Name="Installed"
+                     Type="integer"
+                     Value="1"
+                     KeyPath="yes" />
+    </Component>
+  </Fragment>
+</Wix>

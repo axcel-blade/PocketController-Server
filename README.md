@@ -47,12 +47,14 @@ MainForm        (server window)
 
 - Windows 10/11
 - [ViGEmBus driver](https://github.com/nefarius/ViGEmBus/releases)
-- From a [GitHub Release](https://github.com/axcel-blade/PocketController-Server/releases): unzip the win-x64 package and run `PocketControllerServer.exe` (self-contained; no separate .NET runtime install)
+- From a [GitHub Release](https://github.com/axcel-blade/PocketController-Server/releases): install the win-x64 `.exe` (recommended) or `.msi` (self-contained; no separate .NET runtime install)
 - To build from source: .NET 10 SDK, and Visual Studio 2022 17.13+ or Visual Studio 2026 (the solution is `.slnx`)
 
 ## Getting Started
 
-From the repository root (where `PocketControllerServer.slnx` lives):
+**From a release:** install [ViGEmBus](https://github.com/nefarius/ViGEmBus/releases), then download the `.exe` or `.msi` from [Releases](https://github.com/axcel-blade/PocketController-Server/releases) and run the installer. Prefer the `.exe` bootstrapper unless you need the `.msi` for silent/`msiexec` installs.
+
+**From source** (repository root, where `PocketControllerServer.slnx` lives):
 
 1. Install the ViGEmBus driver.
 2. Open `PocketControllerServer.slnx`, set **PocketControllerServer** as the startup project, and run it (F5).

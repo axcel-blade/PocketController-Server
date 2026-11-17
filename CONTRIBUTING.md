@@ -50,8 +50,8 @@ If you change them, update `Protocol/`, `Tests/`, and that document.
   - `README.md` — the version badge and the **Version** section
   - `PocketControllerServer.csproj` — `Version`, `AssemblyVersion`, `FileVersion`
   - `MainForm.Designer.cs` — the `lblVersion` text
-  - Tag the release `vX.Y.Z` (numeric SemVer only, e.g. `v1.2.3`)
-- Do not include build outputs (`bin/`, `obj/`) or IDE files (`.vs/`) in your commit.
+  - Tag the release `vX.Y.Z` (numeric SemVer only, e.g. `v1.2.3`) — the release workflow publishes `PocketControllerServer-X.Y.Z-win-x64.exe` and `.msi`
+- Do not include build outputs (`bin/`, `obj/`, `publish/`, `artifacts/`) or IDE files (`.vs/`) in your commit.
 
 ## Code Style
 
