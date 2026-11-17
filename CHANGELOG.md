@@ -7,7 +7,7 @@ The version in `PocketControllerServer.csproj` is **1.2.2** (`Version`, `Assembl
 ## [Unreleased]
 
 ### Added
-- GitHub Actions workflows for release publishing, CodeQL, dependency review, secret scanning, changelog checks, stale issue cleanup, coverage, release drafting, Conventional Commit / PR title checks, license checks, and SBOM generation
+- GitHub Actions workflows for CI (build/test/publish) and tagged release publishing
 
 ### Changed
 - Moved the .NET project to the repository root so `dotnet build` / `dotnet test` work from the clone directory (removed the nested `server/` folder)
