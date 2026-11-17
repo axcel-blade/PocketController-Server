@@ -12,3 +12,6 @@ The version in `PocketControllerServer.csproj` is **1.2.3** (`Version`, `Assembl
 ### Changed
 - Moved the .NET project to the repository root so `dotnet build` / `dotnet test` work from the clone directory (removed the nested `server/` folder)
 - Tagged releases publish Windows installers (`.exe` setup bootstrapper and `.msi`) instead of a zip — self-contained, no separate .NET runtime install
+
+### Fixed
+- Windows installer now creates a desktop shortcut in addition to the Start Menu shortcut
