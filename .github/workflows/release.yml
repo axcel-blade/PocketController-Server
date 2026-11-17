@@ -1,5 +1,10 @@
 name: Release - Server
 
+# Publishes Windows installers only:
+#   PocketControllerServer-<version>-win-x64.exe  (setup bootstrapper)
+#   PocketControllerServer-<version>-win-x64.msi  (Windows Installer)
+# Zip packages are not built or uploaded.
+
 on:
   push:
     tags:
@@ -7,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to release (e.g. 1.2.3). Creates tag v<version> if missing."
+        description: "Version to release as .exe + .msi (e.g. 1.2.4). Creates tag v<version> if missing."
         required: true
         type: string
 
@@ -47,7 +52,7 @@ jobs:
           }
 
           if ($version -notmatch '^\d+\.\d+\.\d+$') {
-            throw "Invalid version '$version'. Expected numeric SemVer like 1.2.3 (tag v1.2.3)."
+            throw "Invalid version '$version'. Expected numeric SemVer like 1.2.4 (tag v1.2.4)."
           }
 
           $project = 'PocketControllerServer.csproj'
@@ -57,10 +62,12 @@ jobs:
             Write-Warning "Tag/version $version does not match <Version>$projectVersion</Version> in $project."
           }
 
-          $zip = "PocketControllerServer-$version-win-x64.zip"
+          $msi = "PocketControllerServer-$version-win-x64.msi"
+          $exe = "PocketControllerServer-$version-win-x64.exe"
           "version=$version" >> $env:GITHUB_OUTPUT
           "tag=v$version" >> $env:GITHUB_OUTPUT
-          "zip=$zip" >> $env:GITHUB_OUTPUT
+          "msi=$msi" >> $env:GITHUB_OUTPUT
+          "exe=$exe" >> $env:GITHUB_OUTPUT
           Write-Host "Releasing PocketController-Server $version (tag v$version)"
 
       - name: Setup .NET
@@ -84,7 +91,7 @@ jobs:
           --no-restore
           --configuration Release
 
-      - name: Publish self-contained installable
+      - name: Publish self-contained win-x64
         run: >
           dotnet publish PocketControllerServer.csproj
           --no-restore
@@ -96,21 +103,73 @@ jobs:
           -p:PublishSingleFile=true
           -p:IncludeNativeLibrariesForSelfExtract=true
           -p:EnableCompressionInSingleFile=true
+          -p:DebugType=none
 
-      - name: Zip publish output
+      - name: Install WiX
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Path artifacts -Force | Out-Null
-          $zipPath = "artifacts/${{ steps.version.outputs.zip }}"
-          if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
-          Compress-Archive -Path publish/* -DestinationPath $zipPath
+          dotnet tool restore
+          dotnet tool run wix -- --version
+          dotnet tool run wix -- extension add WixToolset.UI.wixext/5.0.2
+          dotnet tool run wix -- extension add WixToolset.BootstrapperApplications.wixext/5.0.2
+
+      - name: Build MSI and EXE installers
+        shell: pwsh
+        run: |
+          $version = '${{ steps.version.outputs.version }}'
+          $msiName = '${{ steps.version.outputs.msi }}'
+          $exeName = '${{ steps.version.outputs.exe }}'
+          $publishDir = Join-Path $PWD 'publish'
+          $iconFile = Join-Path $PWD 'Assets\app.ico'
+          $licenseRtf = Join-Path $PWD 'installer\License.rtf'
+          $artifacts = Join-Path $PWD 'artifacts'
+          New-Item -ItemType Directory -Path $artifacts -Force | Out-Null
+
+          $serverExe = Join-Path $publishDir 'PocketControllerServer.exe'
+          if (-not (Test-Path $serverExe)) {
+            throw "Missing publish output: $serverExe"
+          }
+
+          $msiPath = Join-Path $artifacts $msiName
+          if (Test-Path $msiPath) { Remove-Item $msiPath -Force }
+
+          dotnet tool run wix -- build installer\Product.wxs `
+            -d "Version=$version" `
+            -d "PublishDir=$publishDir" `
+            -d "IconFile=$iconFile" `
+            -d "LicenseRtf=$licenseRtf" `
+            -ext WixToolset.UI.wixext `
+            -arch x64 `
+            -o $msiPath
+
+          if (-not (Test-Path $msiPath)) {
+            throw "MSI build failed: $msiPath"
+          }
+
+          $bundlePath = Join-Path $artifacts $exeName
+          if (Test-Path $bundlePath) { Remove-Item $bundlePath -Force }
+
+          dotnet tool run wix -- build installer\Bundle.wxs `
+            -d "Version=$version" `
+            -d "MsiPath=$msiPath" `
+            -d "IconFile=$iconFile" `
+            -ext WixToolset.BootstrapperApplications.wixext `
+            -arch x64 `
+            -o $bundlePath
+
+          if (-not (Test-Path $bundlePath)) {
+            throw "EXE bootstrapper build failed: $bundlePath"
+          }
+
+          Get-ChildItem $artifacts | Format-Table Name, Length
 
       - name: Compose release notes
         id: notes
         shell: pwsh
         run: |
           $version = '${{ steps.version.outputs.version }}'
-          $zip = '${{ steps.version.outputs.zip }}'
+          $msi = '${{ steps.version.outputs.msi }}'
+          $exe = '${{ steps.version.outputs.exe }}'
           $changelog = Get-Content CHANGELOG.md -Raw
 
           $pattern = "(?ms)^## \[$([regex]::Escape($version))\][^\r\n]*\r?\n(?<body>.*?)(?=^## \[|\z)"
@@ -118,10 +177,12 @@ jobs:
           $section = if ($match.Success) { $match.Groups['body'].Value.Trim() } else { '' }
 
           $notes = @(
-            "Windows installable build of PocketController-Server $version (self-contained, 64-bit).",
+            "Windows installers for PocketController-Server $version (self-contained, 64-bit).",
             "",
-            "- ``$zip``: unzip and run ``PocketControllerServer.exe``. No separate .NET runtime install required.",
-            "- Still requires the ViGEmBus driver."
+            "- ``$exe``: recommended setup bootstrapper. Installs the MSI and adds a Start Menu shortcut.",
+            "- ``$msi``: Windows Installer package for silent/enterprise installs (``msiexec /i $msi``).",
+            "- No separate .NET runtime install required.",
+            "- Still requires the [ViGEmBus driver](https://github.com/nefarius/ViGEmBus/releases)."
           ) -join "`n"
 
           if ($section) {
@@ -145,7 +206,7 @@ jobs:
             git push origin $tag
           }
 
-      - name: Publish GitHub Release
+      - name: Publish GitHub Release (exe + msi)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
@@ -153,18 +214,34 @@ jobs:
           $tag = '${{ steps.version.outputs.tag }}'
           $version = '${{ steps.version.outputs.version }}'
           $notes = '${{ steps.notes.outputs.path }}'
-          $zip = "artifacts/${{ steps.version.outputs.zip }}"
+          $msiName = '${{ steps.version.outputs.msi }}'
+          $exeName = '${{ steps.version.outputs.exe }}'
+          $msi = "artifacts/$msiName"
+          $exe = "artifacts/$exeName"
 
-          foreach ($file in $zip, $notes) {
+          foreach ($file in $msi, $exe, $notes) {
             if (-not (Test-Path $file)) { throw "Missing release file: $file" }
           }
 
           if (gh release view $tag 2>$null) {
-            gh release upload $tag $zip --clobber
+            # Drop legacy zip (or any non-installer) assets if this tag was published before.
+            $assets = gh release view $tag --json assets --jq '.assets[].name' 2>$null
+            foreach ($asset in $assets) {
+              if ($asset -and $asset -ne $msiName -and $asset -ne $exeName) {
+                Write-Host "Removing obsolete release asset: $asset"
+                gh release delete-asset $tag $asset --yes
+              }
+            }
+
+            gh release upload $tag $msi $exe --clobber
             gh release edit $tag --title "PocketController-Server $version" --notes-file $notes
           } else {
-            gh release create $tag $zip `
+            gh release create $tag $msi $exe `
               --title "PocketController-Server $version" `
               --notes-file $notes `
               --verify-tag
           }
+
+          Write-Host "Released $tag with:"
+          Write-Host "  - $exeName"
+          Write-Host "  - $msiName"

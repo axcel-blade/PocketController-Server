@@ -13,7 +13,7 @@
 
 <!-- Static badges -->
 [![License: MIT](https://img.shields.io/badge/license-MIT-c4f82a)](LICENSE.md)
-[![Version](https://img.shields.io/badge/version-1.2.3-c4f82a)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.2.4-c4f82a)](CHANGELOG.md)
 [![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![Platforms](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4?logo=windows&logoColor=white)](docs/ARCHITECTURE.md)
 [![Protocol](https://img.shields.io/badge/protocol-UDP%20%C2%B7%2048%20bytes-5cd6e6)](docs/PROTOCOL.md)
@@ -47,12 +47,14 @@ MainForm        (server window)
 
 - Windows 10/11
 - [ViGEmBus driver](https://github.com/nefarius/ViGEmBus/releases)
-- From a [GitHub Release](https://github.com/axcel-blade/PocketController-Server/releases): unzip the win-x64 package and run `PocketControllerServer.exe` (self-contained; no separate .NET runtime install)
+- From a [GitHub Release](https://github.com/axcel-blade/PocketController-Server/releases): install the win-x64 `.exe` (recommended) or `.msi` (self-contained; no separate .NET runtime install)
 - To build from source: .NET 10 SDK, and Visual Studio 2022 17.13+ or Visual Studio 2026 (the solution is `.slnx`)
 
 ## Getting Started
 
-From the repository root (where `PocketControllerServer.slnx` lives):
+**From a release:** install [ViGEmBus](https://github.com/nefarius/ViGEmBus/releases), then download the `.exe` or `.msi` from [Releases](https://github.com/axcel-blade/PocketController-Server/releases) and run the installer. Prefer the `.exe` bootstrapper unless you need the `.msi` for silent/`msiexec` installs.
+
+**From source** (repository root, where `PocketControllerServer.slnx` lives):
 
 1. Install the ViGEmBus driver.
 2. Open `PocketControllerServer.slnx`, set **PocketControllerServer** as the startup project, and run it (F5).
@@ -76,9 +78,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 | Project | Version |
 |---------|---------|
-| PocketController Server | **1.2.3** |
+| PocketController Server | **1.2.4** |
 
-`PocketControllerServer.csproj` sets `Version`, `AssemblyVersion` (`1.2.3.0`), and `FileVersion` (`1.2.3.0`). The window header in `MainForm.Designer.cs` shows the same number. See the [changelog](CHANGELOG.md).
+`PocketControllerServer.csproj` sets `Version`, `AssemblyVersion` (`1.2.4.0`), and `FileVersion` (`1.2.4.0`). The window header in `MainForm.Designer.cs` shows the same number. See the [changelog](CHANGELOG.md).
 
 ## Further reading
 

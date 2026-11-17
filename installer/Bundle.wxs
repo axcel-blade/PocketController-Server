@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal">
+  <!--
+    Build (after MSI exists):
+      wix build installer\Bundle.wxs
+        -d Version=1.2.4
+        -d MsiPath=%CD%\artifacts\PocketControllerServer-1.2.4-win-x64.msi
+        -d IconFile=%CD%\Assets\app.ico
+        -ext WixToolset.BootstrapperApplications.wixext
+        -arch x64
+        -o artifacts\PocketControllerServer-1.2.4-win-x64.exe
+  -->
+  <Bundle
+      Name="PocketController Server"
+      Manufacturer="Axcel Blade"
+      Version="$(Version)"
+      UpgradeCode="DC1F8CBD-5AE2-45CB-9CA6-55CD5577F894"
+      IconSourceFile="$(IconFile)"
+      AboutUrl="https://github.com/axcel-blade/PocketController-Server"
+      HelpUrl="https://github.com/axcel-blade/PocketController-Server#readme">
+
+    <BootstrapperApplication>
+      <bal:WixStandardBootstrapperApplication
+          LicenseUrl="https://github.com/axcel-blade/PocketController-Server/blob/main/LICENSE.md"
+          Theme="hyperlinkLicense"
+          ShowVersion="yes" />
+    </BootstrapperApplication>
+
+    <Chain>
+      <MsiPackage
+          Id="PocketControllerServerMsi"
+          SourceFile="$(MsiPath)"
+          Compressed="yes"
+          Vital="yes"
+          Visible="no" />
+    </Chain>
+  </Bundle>
+</Wix>

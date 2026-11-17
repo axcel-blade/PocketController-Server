@@ -1,11 +1,13 @@
 # Changelog
 
-The version in `PocketControllerServer.csproj` is **1.2.3** (`Version`, `AssemblyVersion` `1.2.3.0`, `FileVersion` `1.2.3.0`).
+The version in `PocketControllerServer.csproj` is **1.2.4** (`Version`, `AssemblyVersion` `1.2.4.0`, `FileVersion` `1.2.4.0`).
 
 ## [Unreleased]
 
+## [1.2.4] - 2026-11-18
+
 ### Changed
-- Tagged releases (`vX.Y.Z`, numeric SemVer) now publish a self-contained Windows zip — unzip and run `PocketControllerServer.exe` without installing the .NET runtime
+- Tagged releases (`vX.Y.Z`, numeric SemVer) now publish Windows installers (`.exe` setup bootstrapper and `.msi`) instead of a zip — self-contained, no separate .NET runtime install
 
 ## [1.2.3] - 2026-11-17
 
