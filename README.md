@@ -1,7 +1,7 @@
 # PocketController-Server
 
 <p align="center">
-  <img src="server/Assets/app.ico" alt="PocketController Server icon" width="128">
+  <img src="Assets/app.ico" alt="PocketController Server icon" width="128">
 </p>
 
 <!-- Dynamic badges (live data from GitHub) -->
@@ -13,7 +13,7 @@
 
 <!-- Static badges -->
 [![License: MIT](https://img.shields.io/badge/license-MIT-c4f82a)](LICENSE.md)
-[![Version](https://img.shields.io/badge/version-1.2.2-c4f82a)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.2.3-c4f82a)](CHANGELOG.md)
 [![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![Platforms](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D4?logo=windows&logoColor=white)](docs/ARCHITECTURE.md)
 [![Protocol](https://img.shields.io/badge/protocol-UDP%20%C2%B7%2048%20bytes-5cd6e6)](docs/PROTOCOL.md)
@@ -23,11 +23,10 @@ This repository is the Windows server. It turns UDP input into a virtual Xbox 36
 ## What this project does
 
 ```
-server/
-├── Protocol/       (48-byte packets and discovery text)
-├── NetworkLayer/   (UDP listen, sessions, discovery)
-├── GamepadDriver/  (virtual Xbox 360 via ViGEm)
-└── MainForm        (server window)
+Protocol/       (48-byte packets and discovery text)
+NetworkLayer/   (UDP listen, sessions, discovery)
+GamepadDriver/  (virtual Xbox 360 via ViGEm)
+MainForm        (server window)
 ```
 
 - Listens for 48-byte little-endian UDP controller packets. The default port is `5555`.
@@ -53,8 +52,10 @@ server/
 
 ## Getting Started
 
+From the repository root (where `PocketControllerServer.slnx` lives):
+
 1. Install the ViGEmBus driver.
-2. Open `server/PocketControllerServer.slnx`, set **PocketControllerServer** as the startup project, and run it (F5).
+2. Open `PocketControllerServer.slnx`, set **PocketControllerServer** as the startup project, and run it (F5).
 3. Click **Start**. The server listens on UDP port `5555` by default.
 4. If Windows Firewall asks, allow PocketController Server on private networks (UDP `5555` for play, `5556`–`5557` for discovery).
 
@@ -65,7 +66,6 @@ Having trouble? See [SUPPORT.md](SUPPORT.md).
 ## Development
 
 ```sh
-cd server
 dotnet build PocketControllerServer.slnx
 dotnet test Tests
 ```
@@ -76,9 +76,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 | Project | Version |
 |---------|---------|
-| PocketController Server | **1.2.2** |
+| PocketController Server | **1.2.3** |
 
-`server/PocketControllerServer.csproj` sets `Version`, `AssemblyVersion` (`1.2.2.0`), and `FileVersion` (`1.2.2.0`). The window header in `server/MainForm.Designer.cs` shows the same number. See the [changelog](CHANGELOG.md).
+`PocketControllerServer.csproj` sets `Version`, `AssemblyVersion` (`1.2.3.0`), and `FileVersion` (`1.2.3.0`). The window header in `MainForm.Designer.cs` shows the same number. See the [changelog](CHANGELOG.md).
 
 ## Further reading
 

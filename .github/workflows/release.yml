@@ -1,0 +1,154 @@
+name: Release - Server
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g. 1.2.3). Creates tag v<version> if missing."
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $version = "${{ inputs.version }}".Trim().TrimStart('v', 'V')
+          } else {
+            $version = "${{ github.ref_name }}".TrimStart('v', 'V')
+          }
+
+          if ($version -notmatch '^\d+\.\d+\.\d+([+-].+)?$') {
+            throw "Invalid version '$version'. Expected SemVer like 1.2.3 (optional tag v1.2.3)."
+          }
+
+          $project = 'PocketControllerServer.csproj'
+          $projectVersion = ([xml](Get-Content $project)).Project.PropertyGroup.Version |
+            Where-Object { $_ } | Select-Object -First 1
+          if ($projectVersion -and $projectVersion -ne $version) {
+            Write-Warning "Tag/version $version does not match <Version>$projectVersion</Version> in $project."
+          }
+
+          $zip = "PocketControllerServer-$version-win-x64.zip"
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "tag=v$version" >> $env:GITHUB_OUTPUT
+          "zip=$zip" >> $env:GITHUB_OUTPUT
+          Write-Host "Releasing PocketController-Server $version (tag v$version)"
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore PocketControllerServer.slnx -r win-x64
+
+      - name: Build
+        run: >
+          dotnet build PocketControllerServer.slnx
+          --no-restore
+          --configuration Release
+          -p:Version=${{ steps.version.outputs.version }}
+
+      - name: Test
+        run: >
+          dotnet test Tests/PocketController.Tests.csproj
+          --no-restore
+          --configuration Release
+
+      - name: Publish
+        run: >
+          dotnet publish PocketControllerServer.csproj
+          --no-restore
+          --configuration Release
+          --runtime win-x64
+          --self-contained false
+          --output publish/
+          -p:Version=${{ steps.version.outputs.version }}
+
+      - name: Zip publish output
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path artifacts -Force | Out-Null
+          $zipPath = "artifacts/${{ steps.version.outputs.zip }}"
+          if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
+          Compress-Archive -Path publish/* -DestinationPath $zipPath
+
+      - name: Compose release notes
+        id: notes
+        shell: pwsh
+        run: |
+          $version = '${{ steps.version.outputs.version }}'
+          $zip = '${{ steps.version.outputs.zip }}'
+          $changelog = Get-Content CHANGELOG.md -Raw
+
+          $pattern = "(?ms)^## \[$([regex]::Escape($version))\][^\r\n]*\r?\n(?<body>.*?)(?=^## \[|\z)"
+          $match = [regex]::Match($changelog, $pattern)
+          $section = if ($match.Success) { $match.Groups['body'].Value.Trim() } else { '' }
+
+          $notes = @(
+            "Windows build of PocketController-Server $version (framework-dependent, 64-bit). Requires the .NET 10 runtime and the ViGEmBus driver.",
+            "",
+            "- ``$zip``: published server binaries"
+          ) -join "`n"
+
+          if ($section) {
+            $notes += "`n`n$section"
+          }
+
+          $path = "artifacts/release-notes-$version.md"
+          New-Item -ItemType Directory -Path artifacts -Force | Out-Null
+          Set-Content -Path $path -Value $notes -Encoding utf8
+          "path=$path" >> $env:GITHUB_OUTPUT
+
+      - name: Ensure tag exists
+        if: github.event_name == 'workflow_dispatch'
+        shell: pwsh
+        run: |
+          $tag = '${{ steps.version.outputs.tag }}'
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if (-not (git rev-parse -q --verify "refs/tags/$tag")) {
+            git tag -a $tag -m "PocketController-Server ${{ steps.version.outputs.version }}"
+            git push origin $tag
+          }
+
+      - name: Publish GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          $tag = '${{ steps.version.outputs.tag }}'
+          $version = '${{ steps.version.outputs.version }}'
+          $notes = '${{ steps.notes.outputs.path }}'
+          $zip = "artifacts/${{ steps.version.outputs.zip }}"
+
+          foreach ($file in $zip, $notes) {
+            if (-not (Test-Path $file)) { throw "Missing release file: $file" }
+          }
+
+          if (gh release view $tag 2>$null) {
+            gh release upload $tag $zip --clobber
+            gh release edit $tag --title "PocketController-Server $version" --notes-file $notes
+          } else {
+            gh release create $tag $zip `
+              --title "PocketController-Server $version" `
+              --notes-file $notes `
+              --verify-tag
+          }

@@ -1,6 +1,6 @@
 # PocketController Wire Protocol
 
-This file describes the packets this Windows server parses and the replies it sends. The implementation is `server/Protocol/`. Phones connect from [PocketController-App](https://github.com/axcel-blade/PocketController-App).
+This file describes the packets this Windows server parses and the replies it sends. The implementation is `Protocol/`. Phones connect from [PocketController-App](https://github.com/axcel-blade/PocketController-App).
 
 ## Transport
 

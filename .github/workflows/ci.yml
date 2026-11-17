@@ -23,13 +23,13 @@ jobs:
           dotnet-version: "10.0.x"
 
       - name: Restore
-        run: dotnet restore server/PocketControllerServer.slnx -r win-x64
+        run: dotnet restore PocketControllerServer.slnx -r win-x64
 
       - name: Build
-        run: dotnet build server/PocketControllerServer.slnx --no-restore --configuration Release
+        run: dotnet build PocketControllerServer.slnx --no-restore --configuration Release
 
       - name: Test
-        run: dotnet test server/Tests/PocketController.Tests.csproj --no-restore --configuration Release --logger "trx;LogFileName=test-results.trx"
+        run: dotnet test Tests/PocketController.Tests.csproj --no-restore --configuration Release --logger "trx;LogFileName=test-results.trx"
 
       - name: Publish test results
         uses: dorny/test-reporter@v1
@@ -41,7 +41,7 @@ jobs:
 
       - name: Publish
         run: >
-          dotnet publish server/PocketControllerServer.csproj
+          dotnet publish PocketControllerServer.csproj
           --no-restore
           --configuration Release
           --runtime win-x64

@@ -10,7 +10,7 @@ Help for PocketController Server on Windows.
 
 ## Before Opening an Issue
 
-1. Check the [README](README.md) for setup: ViGEmBus, .NET 10, and UDP `5555`, `5556`, and `5557`.
+1. Check the [README](README.md) for setup: ViGEmBus, .NET 10, and UDP `5555`, `5556`, and `5557`. Build and run from the repository root (the folder that contains `PocketControllerServer.slnx`).
 2. Install or update the [ViGEmBus driver](https://github.com/nefarius/ViGEmBus/releases). A missing or outdated driver is the usual reason a virtual controller never appears.
 3. Confirm **Start** was clicked and Windows Firewall allows PocketController Server on private networks.
 4. Search [existing issues](https://github.com/axcel-blade/PocketController-Server/issues).

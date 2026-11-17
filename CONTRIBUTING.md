@@ -29,8 +29,9 @@ This is the required workflow. Only `main` exists in this repository today.
 
 ## Building
 
+From the repository root (where `PocketControllerServer.slnx` lives):
+
 ```
-cd server
 dotnet build PocketControllerServer.slnx
 dotnet test Tests
 ```
@@ -38,7 +39,7 @@ dotnet test Tests
 ## Protocol Changes
 
 The packets this server parses and the replies it sends are documented in [docs/PROTOCOL.md](docs/PROTOCOL.md).
-If you change them, update `server/Protocol/`, `server/Tests`, and that document.
+If you change them, update `Protocol/`, `Tests/`, and that document.
 
 ## Pull Request Guidelines
 
@@ -47,8 +48,8 @@ If you change them, update `server/Protocol/`, `server/Tests`, and that document
 - When releasing the server, update:
   - `CHANGELOG.md` — move `[Unreleased]` entries into a dated `## [X.Y.Z] - YYYY-MM-DD` section
   - `README.md` — the version badge and the **Version** section
-  - `server/PocketControllerServer.csproj` — `Version`, `AssemblyVersion`, `FileVersion`
-  - `server/MainForm.Designer.cs` — the `lblVersion` text
+  - `PocketControllerServer.csproj` — `Version`, `AssemblyVersion`, `FileVersion`
+  - `MainForm.Designer.cs` — the `lblVersion` text
 - Do not include build outputs (`bin/`, `obj/`) or IDE files (`.vs/`) in your commit.
 
 ## Code Style
