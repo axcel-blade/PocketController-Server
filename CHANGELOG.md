@@ -1,10 +1,12 @@
 # Changelog
 
-Released history is not recorded in this repository. There are no git tags and no release notes.
-
-The version in `PocketControllerServer.csproj` is **1.2.2** (`Version`, `AssemblyVersion` `1.2.2.0`, `FileVersion` `1.2.2.0`).
+The version in `PocketControllerServer.csproj` is **1.2.3** (`Version`, `AssemblyVersion` `1.2.3.0`, `FileVersion` `1.2.3.0`).
 
 ## [Unreleased]
+
+No notes yet.
+
+## [1.2.3] - 2026-11-17
 
 ### Added
 - GitHub Actions workflows for CI (build/test/publish) and tagged release publishing
