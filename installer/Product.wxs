@@ -38,6 +38,7 @@
     <Feature Id="ProductFeature" Title="PocketController Server" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
       <ComponentRef Id="ApplicationShortcut" />
+      <ComponentRef Id="DesktopShortcut" />
     </Feature>
 
     <ui:WixUI Id="WixUI_Minimal" />
@@ -52,6 +53,8 @@
     <StandardDirectory Id="ProgramMenuFolder">
       <Directory Id="ApplicationProgramsFolder" Name="PocketController" />
     </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
   </Fragment>
 
   <Fragment>
@@ -74,6 +77,21 @@
       <RegistryValue Root="HKCU"
                      Key="Software\Axcel Blade\PocketController Server"
                      Name="Installed"
+                     Type="integer"
+                     Value="1"
+                     KeyPath="yes" />
+    </Component>
+
+    <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="221E752B-56E1-413C-B495-0D9CA7FDA8DD">
+      <Shortcut Id="ApplicationDesktopShortcut"
+                Name="PocketController Server"
+                Description="Wireless Xbox 360 controller server for Windows"
+                Target="[!ServerExe]"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="AppIcon" />
+      <RegistryValue Root="HKCU"
+                     Key="Software\Axcel Blade\PocketController Server"
+                     Name="DesktopShortcut"
                      Type="integer"
                      Value="1"
                      KeyPath="yes" />
