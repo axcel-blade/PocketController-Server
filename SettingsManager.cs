@@ -2,7 +2,7 @@ using System.Text.Json;
 
 namespace PocketControllerServer;
 
-/// <summary>User-configurable server settings, persisted to <c>settings.json</c> next to the EXE.</summary>
+/// <summary>User-configurable server settings, persisted to <c>settings.json</c> under LocalAppData.</summary>
 public class AppSettings
 {
     /// <summary>UDP port the server listens on. Defaults to <see cref="PocketController.Protocol.Constants.DefaultPort"/>.</summary>
@@ -15,12 +15,22 @@ public class AppSettings
 /// <summary>
 /// Loads and saves <see cref="AppSettings"/> as indented JSON.
 /// A missing or corrupt file silently falls back to defaults.
+/// Settings live under LocalAppData so installed builds can write without elevation.
 /// </summary>
 public static class SettingsManager
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 
+    private static readonly string SettingsDirectory =
+        Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "PocketController");
+
     private static readonly string SettingsPath =
+        Path.Combine(SettingsDirectory, "settings.json");
+
+    /// <summary>Legacy path used by builds that stored settings next to the EXE.</summary>
+    private static readonly string LegacySettingsPath =
         Path.Combine(AppContext.BaseDirectory, "settings.json");
 
     /// <summary>
@@ -31,9 +41,13 @@ public static class SettingsManager
     {
         try
         {
-            if (File.Exists(SettingsPath))
+            var path = File.Exists(SettingsPath) ? SettingsPath
+                : File.Exists(LegacySettingsPath) ? LegacySettingsPath
+                : null;
+
+            if (path is not null)
             {
-                var json = File.ReadAllText(SettingsPath);
+                var json = File.ReadAllText(path);
                 return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
             }
         }
@@ -44,6 +58,7 @@ public static class SettingsManager
     /// <summary>Writes <paramref name="settings"/> to <c>settings.json</c> as indented JSON.</summary>
     public static void Save(AppSettings settings)
     {
+        Directory.CreateDirectory(SettingsDirectory);
         var json = JsonSerializer.Serialize(settings, JsonOptions);
         File.WriteAllText(SettingsPath, json);
     }
