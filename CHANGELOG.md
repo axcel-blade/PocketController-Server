@@ -1,8 +1,13 @@
 # Changelog
 
-The version in `PocketControllerServer.csproj` is **1.2.4** (`Version`, `AssemblyVersion` `1.2.4.0`, `FileVersion` `1.2.4.0`).
+The version in `PocketControllerServer.csproj` is **1.2.5** (`Version`, `AssemblyVersion` `1.2.5.0`, `FileVersion` `1.2.5.0`).
 
 ## [Unreleased]
+
+## [1.2.5] - 2026-11-18
+
+### Fixed
+- Starting the server no longer crashes with Access Denied when installed under Program Files; settings are saved under LocalAppData instead of next to the EXE
 
 ## [1.2.4] - 2026-11-18
 
