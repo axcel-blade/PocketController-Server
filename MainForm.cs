@@ -50,6 +50,20 @@ public partial class MainForm : Form
         _ = NativeMethods.DwmSetWindowAttribute(Handle, 20, ref on, sizeof(int));
     }
 
+    protected override void WndProc(ref Message m)
+    {
+        // A second shortcut/Start Menu launch posts this instead of starting another process.
+        if (m.Msg == SingleInstance.WmShowInstance)
+        {
+            Show();
+            if (WindowState == FormWindowState.Minimized)
+                WindowState = FormWindowState.Normal;
+            Activate();
+            BringToFront();
+        }
+        base.WndProc(ref m);
+    }
+
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);

@@ -1,8 +1,13 @@
 # Changelog
 
-The version in `PocketControllerServer.csproj` is **1.2.3** (`Version`, `AssemblyVersion` `1.2.3.0`, `FileVersion` `1.2.3.0`).
+The version in `PocketControllerServer.csproj` is **1.2.4** (`Version`, `AssemblyVersion` `1.2.4.0`, `FileVersion` `1.2.4.0`).
 
 ## [Unreleased]
+
+## [1.2.4] - 2026-11-18
+
+### Fixed
+- Opening the server again (desktop or Start Menu shortcut) no longer starts a second process when one is already running in the tray; the existing window is restored instead
 
 ## [1.2.3] - 2026-11-17
 
